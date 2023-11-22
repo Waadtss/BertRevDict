@@ -58,13 +58,14 @@ class ARBERTRevDict(nn.Module):
         
         self.linear = nn.Linear(self.base_model.config.hidden_size, args.max_len)
 
-    def forward(self, input_ids, attention_mask):
+    def forward(self, input_ids, token_type_ids , attention_mask):
         feats = self.base_model(input_ids=input_ids, attention_mask=attention_mask).pooler_output
         embedding = self.linear(feats)
         return embedding     
 
     def save(self, file):
-        torch.save(self, file)
+        self.base_model.save_pretrained(file,from_pt=True)
+        # torch.save(self, file)
 
     @staticmethod
     def load(file):
