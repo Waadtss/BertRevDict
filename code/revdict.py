@@ -158,7 +158,7 @@ def train(args):
         pbar = tqdm.tqdm(
             desc=f"Train {epoch}", total=len(train_dataset), disable=None, leave=False
         )
-        for ids, word, gloss, electra, sgns in train_dataloader:
+        for ids, word, gloss, electra in train_dataloader:
             optimizer.zero_grad()
 
             word_tokens = tokenizer(word, padding=True, return_tensors='pt').to(args.device)
@@ -168,6 +168,7 @@ def train(args):
                 target_embs = torch.stack(electra, dim=1).to(args.device)
             else:
                 target_embs = torch.stack(sgns, dim=1).to(args.device)
+            # print(gloss_tokens)
 
             target_embs = target_embs.float()
             pred = model(**gloss_tokens)
@@ -196,7 +197,7 @@ def train(args):
                     disable=None,
                     leave=False,
                 )
-                for ids, word, gloss, electra, sgns in valid_dataloader:
+                for ids, word, gloss, electra in valid_dataloader:
                     word_tokens = tokenizer(word, padding=True, return_tensors='pt').to(args.device)
                     gloss_tokens = tokenizer(gloss, padding=True, return_tensors='pt').to(args.device)
                     if args.target_arch == "electra":
@@ -223,7 +224,7 @@ def train(args):
                 if sum_cosine >= best_cosine:
                     best_cosine = sum_cosine
                     print(f"Saving Best Checkpoint at Epoch {epoch}")
-                    model.save(args.save_dir / "model_best.pt")
+                    model.save(args.save_dir)
 
                 # keep track of the average loss on dev set for this epoch
                 summary_writer.add_scalar(
