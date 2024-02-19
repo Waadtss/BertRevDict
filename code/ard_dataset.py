@@ -12,7 +12,7 @@ class ARDDataset(Dataset):
         if self.is_test:
             return sample["id"], sample["word"], sample["gloss"],
         else:
-            return sample["id"], sample["word"], sample["gloss"], sample["electra"]
+            return sample["id"], sample["word"], sample["gloss"], sample["electra"], sample["bertseg"], sample['bertmsa']
     
     def __len__(self):
         return len(self.data)

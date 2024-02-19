@@ -68,7 +68,7 @@ def get_parser(
         "--target_arch",
         type=str,
         default="electra",
-        choices=("sgns", "electra"),
+        choices=("sgns", "electra", "bertseg", "bertmsa"),
         help="embedding architecture to use as target",
     )
     parser.add_argument(
@@ -224,7 +224,7 @@ def train(args):
                 if sum_cosine >= best_cosine:
                     best_cosine = sum_cosine
                     print(f"Saving Best Checkpoint at Epoch {epoch}")
-                    model.save(args.save_dir)
+                    model.save(args.save_dir / "model.pt")
 
                 # keep track of the average loss on dev set for this epoch
                 summary_writer.add_scalar(
