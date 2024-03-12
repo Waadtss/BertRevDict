@@ -71,7 +71,7 @@ class ARBERTRevDict(nn.Module):
 
     @staticmethod
     def load(file):
-        return torch.load(file)
+        return AutoModel.from_pretrained(file)
     
 class PositionalEncoding(nn.Module):
     """From PyTorch"""

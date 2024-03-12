@@ -81,7 +81,7 @@ def get_parser(
     parser.add_argument(
         "--batch_size",
         type=int,
-        default=10,
+        default=64,
         help="batch size",
     )
     parser.add_argument(
@@ -231,7 +231,7 @@ def train(args):
                 if sum_cosine >= best_cosine:
                     best_cosine = sum_cosine
                     print(f"Saving Best Checkpoint at Epoch {epoch}")
-                    model.save(args.save_dir / "model.pt")
+                    model.save(args.save_dir)
                     
 
                 # keep track of the average loss on dev set for this epoch
@@ -265,11 +265,11 @@ def pred(args):
     ## Hyperparams
     logger.debug("Setting up training environment")
 
-    model = models.ARBERTRevDict(args).load(f"{args.save_dir}/model_best.pt")
+    model = models.ARBERTRevDict(args).load(f"{args.save_dir}")
     model.to(args.device)
     model.eval()
 
-    tokenizer = AutoTokenizer.from_pretrained("UBC-NLP/ARBERTv2")     
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)     
 
     vec_tensor_key = f"{args.target_arch}_tensor"
 
@@ -280,8 +280,11 @@ def pred(args):
         for ids, words, gloss in test_dataloader:
             word_tokens = tokenizer(words, padding=True, return_tensors='pt').to(args.device)
             gloss_tokens = tokenizer(gloss, padding=True, return_tensors='pt').to(args.device)
+            # print(gloss_tokens)
 
-            vecs = model(**gloss_tokens).cpu()
+            output = model(**gloss_tokens)
+            # Extract the last hidden states
+            vecs = output.last_hidden_state
             for id, word, vec in zip(ids, words, vecs.unbind()):
                 predictions.append(
                     {"id": id, "word": word, args.target_arch: vec.view(-1).tolist()}
