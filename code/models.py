@@ -38,6 +38,7 @@ class AraT5RevDict(nn.Module):
 
     def save(self, file):
         torch.save(self, file)
+        print("\n--\nsave1\n--\n")
 
     @staticmethod
     def load(file):
@@ -144,3 +145,4 @@ class RevdictModel(nn.Module):
 
     def save(self, file):
         torch.save(self, file)
+        print("\n--\nsave2\n--\n")
