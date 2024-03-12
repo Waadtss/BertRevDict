@@ -65,9 +65,15 @@ class JSONDataset(Dataset):
                     json_dict[f"{arch}_tensor"] = torch.tensor(json_dict[arch])
             if "electra" in json_dict:
                 json_dict["electra_tensor"] = torch.tensor(json_dict["electra"])
+            elif "bertseg" in json_dict:
+                json_dict["bertseg_tensor"] = torch.tensor(json_dict["bertseg"])
+            elif "bertmsa" in json_dict:
+                json_dict["bertmsa_tensor"] = torch.tensor(json_dict["bertmsa"])
         self.has_gloss = "gloss" in self.items[0]
         self.has_vecs = SUPPORTED_ARCHS[0] in self.items[0]
         self.has_electra = "electra" in self.items[0]
+        self.has_bertseg = "bertseg" in self.items[0]
+        self.has_bertmsa = "bertmsa" in self.items[0]
         self.itos = sorted(self.vocab, key=lambda w: self.vocab[w])
 
     def __len__(self):
@@ -163,6 +169,8 @@ def get_dataloader(dataset, batch_size=200, shuffle=True):
     has_gloss = dataset.has_gloss
     has_vecs = dataset.has_vecs
     has_electra = dataset.has_electra
+    has_bertseg = dataset.has_bertseg
+    has_bertmsa = dataset.has_bertmsa
     PAD_idx = dataset.vocab[PAD]
 
     # the collate function has to convert a list of dataset items into a batch
@@ -181,6 +189,10 @@ def get_dataloader(dataset, batch_size=200, shuffle=True):
                 batch[f"{arch}_tensor"] = torch.stack(batch[f"{arch}_tensor"])
         if has_electra:
             batch["electra_tensor"] = torch.stack(batch["electra_tensor"])
+        if has_bertseg:
+            batch["bertseg_tensor"] = torch.stack(batch["bertseg_tensor"])
+        if has_bertmsa:
+            batch["bertmsa_tensor"] = torch.stack(batch["bertmsa_tensor"])
         return dict(batch)
 
     if dataset.has_gloss:

@@ -158,7 +158,7 @@ def train(args):
         pbar = tqdm.tqdm(
             desc=f"Train {epoch}", total=len(train_dataset), disable=None, leave=False
         )
-        for ids, word, gloss, electra in train_dataloader:
+        for ids, word, gloss, electra, bertseg, bertmsa in train_dataloader:
             optimizer.zero_grad()
 
             word_tokens = tokenizer(word, padding=True, return_tensors='pt').to(args.device)
@@ -166,8 +166,11 @@ def train(args):
 
             if args.target_arch == "electra":
                 target_embs = torch.stack(electra, dim=1).to(args.device)
-            else:
-                target_embs = torch.stack(sgns, dim=1).to(args.device)
+            elif args.target_arch =="bertseg":
+                target_embs = torch.stack(bertseg, dim=1).to(args.device)
+            elif args.target_arch =="bertmsa":
+                target_embs = torch.stack(bertmsa, dim=1).to(args.device)
+
             # print(gloss_tokens)
 
             target_embs = target_embs.float()
@@ -197,13 +200,17 @@ def train(args):
                     disable=None,
                     leave=False,
                 )
-                for ids, word, gloss, electra in valid_dataloader:
+                for ids, word, gloss, electra, bertseg, bertmsa in valid_dataloader:
                     word_tokens = tokenizer(word, padding=True, return_tensors='pt').to(args.device)
                     gloss_tokens = tokenizer(gloss, padding=True, return_tensors='pt').to(args.device)
                     if args.target_arch == "electra":
                         target_embs = torch.stack(electra, dim=1).to(args.device)
-                    else:
-                        target_embs = torch.stack(sgns, dim=1).to(args.device)
+                    elif args.target_arch == "bertseg":
+                        target_embs = torch.stack(bertseg, dim=1).to(args.device)
+                    elif args.target_arch == "bertmsa":
+                        target_embs = torch.stack(bertmsa, dim=1).to(args.device)
+                    # else:
+                    #     target_embs = torch.stack(sgns, dim=1).to(args.device)
 
                     target_embs = target_embs.float()
                     pred = model(**gloss_tokens)
