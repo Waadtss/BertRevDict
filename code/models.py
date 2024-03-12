@@ -65,6 +65,7 @@ class ARBERTRevDict(nn.Module):
 
     def save(self, file):
         self.base_model.save_pretrained(file,from_pt=True)
+        print("\n--\nsave_pretrained\n--\n")
         # torch.save(self, file)
 
     @staticmethod

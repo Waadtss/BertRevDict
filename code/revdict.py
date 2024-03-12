@@ -81,7 +81,7 @@ def get_parser(
     parser.add_argument(
         "--batch_size",
         type=int,
-        default=64,
+        default=10,
         help="batch size",
     )
     parser.add_argument(
@@ -232,6 +232,7 @@ def train(args):
                     best_cosine = sum_cosine
                     print(f"Saving Best Checkpoint at Epoch {epoch}")
                     model.save(args.save_dir / "model.pt")
+                    
 
                 # keep track of the average loss on dev set for this epoch
                 summary_writer.add_scalar(
