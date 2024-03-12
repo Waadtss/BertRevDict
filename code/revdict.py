@@ -75,7 +75,7 @@ def get_parser(
         "--max_len",
         type=int,
         default=256,
-        choices=(300, 256),
+        choices=(300, 256, 768),
         help="dimension of embedding",
     )
     parser.add_argument(
