@@ -202,7 +202,7 @@ def train(args):
                 )
                 for ids, word, gloss, electra, bertseg, bertmsa in valid_dataloader:
                     word_tokens = tokenizer(word, padding=True, return_tensors='pt').to(args.device)
-                    gloss_tokens = tokenizer(gloss, padding=True, return_tensors='pt').to(args.device)
+                    gloss_tokens = tokenizer(gloss, max_length=512, padding=True, truncation=True, return_tensors='pt').to(args.device)
                     if args.target_arch == "electra":
                         target_embs = torch.stack(electra, dim=1).to(args.device)
                     elif args.target_arch == "bertseg":
