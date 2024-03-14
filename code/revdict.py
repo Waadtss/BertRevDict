@@ -279,7 +279,7 @@ def pred(args):
         pbar = tqdm.tqdm(desc="Pred.", total=len(test_dataset))
         for ids, words, gloss in test_dataloader:
             word_tokens = tokenizer(words, padding=True, return_tensors='pt').to(args.device)
-            gloss_tokens = tokenizer(gloss, padding=True, return_tensors='pt').to(args.device)
+            gloss_tokens = tokenizer(gloss, max_length=512, padding=True, truncation=True, return_tensors='pt').to(args.device)
             # print(gloss_tokens)
 
             output = model(**gloss_tokens)
