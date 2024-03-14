@@ -87,7 +87,7 @@ def main(filename):
                     raise ValueError(
                         f'File "{filename}": some items do not contain all the expected vectors, revdict submission will fail.'
                     )
-        if len(vec_archs - {"sgns", "electra"}):
+        if len(vec_archs - {"bertseg", "bermsa", "electra"}):
                 raise ValueError(
                     f'File "{filename}": unknown vector architecture(s), revdict submission will fail.'
                 )

@@ -36,7 +36,7 @@ import check_output
 
 def get_parser(parser=argparse.ArgumentParser(description="score a submission")):
     parser.add_argument(
-        "submission_path",
+        "--submission_path",
         type=pathlib.Path,
         help="path to submission file to be scored, or to a directory of submissions to be scored",
     )
