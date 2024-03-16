@@ -257,7 +257,7 @@ def pred(args):
     assert args.test_file is not None, "Missing dataset for test"
     # 1. retrieve vocab, dataset, model
         ## make datasets
-    test_dataset = ARDDataset(args.dev_file, is_test=True)
+    test_dataset = ARDDataset(args.test_fil, is_test=True)
     
     ## make dataloader
     test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size)
@@ -292,8 +292,10 @@ def pred(args):
             pbar.update(vecs.size(0))
         pbar.close()
 
+    logger.debug("writing predction file") 
     with open(args.save_dir /args.pred_file, "w") as ostr:
         json.dump( predictions, ostr)
+    logger.debug("writing finished") 
 
 
 def main(args):
@@ -304,6 +306,7 @@ def main(args):
     if args.do_pred:
         logger.debug("Performing revdict prediction")
         pred(args)
+        logger.debug("Prediction finished")
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
