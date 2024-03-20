@@ -258,7 +258,7 @@ def pred(args):
     assert args.test_file is not None, "Missing dataset for test"
     # 1. retrieve vocab, dataset, model
         ## make datasets
-    test_dataset = ARDDataset(args.test_fil, is_test=True)
+    test_dataset = ARDDataset(args.test_file, is_test=True)
     
     ## make dataloader
     test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size)
