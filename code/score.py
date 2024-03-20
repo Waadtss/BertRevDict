@@ -286,6 +286,7 @@ def eval_revdict(args, summary):
     for sub, ref in zip(submission, reference):
       assert sub["id"] == ref["id"], "Mismatch in submission and reference files!"
       for arch in vec_archs:
+        print(arch)
         all_preds[arch].append(sub[arch])
         all_refs[arch].append(ref[arch])
       all_refs["word"].append(ref["word"])
@@ -298,6 +299,11 @@ def eval_revdict(args, summary):
     # Convert all_train["word"] to a tensor of word strings
     all_refs_word = all_refs["word"]
     # all_train_word = all_train["word"]
+
+    print(vec_archs)
+    for arch in vec_archs:
+        print(all_preds[arch])
+        break;
 
     all_preds = {arch: torch.tensor(all_preds[arch]) for arch in vec_archs}
     all_refs = {arch: torch.tensor(all_refs[arch]) for arch in vec_archs}

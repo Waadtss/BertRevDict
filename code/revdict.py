@@ -26,6 +26,7 @@ import models
 
 from transformers import AutoTokenizer
 from ard_dataset import ARDDataset
+import orjson
 
 
 def get_parser(
@@ -138,7 +139,7 @@ def train(args):
 
     # 3. declare optimizer & criterion
     ## Hyperparams
-    EPOCHS, LEARNING_RATE, BETA1, BETA2, WEIGHT_DECAY = 10, 1.0e-4, 0.9, 0.999, 1.0e-6
+    EPOCHS, LEARNING_RATE, BETA1, BETA2, WEIGHT_DECAY = 30, 1.0e-4, 0.9, 0.999, 1.0e-6
     optimizer = optim.AdamW(
         model.parameters(),
         lr=LEARNING_RATE,
@@ -293,9 +294,14 @@ def pred(args):
         pbar.close()
 
     logger.debug("writing predction file") 
-    with open(args.save_dir /args.pred_file, "w") as ostr:
-        json.dump( predictions, ostr)
+    # with open(args.save_dir /args.pred_file, "w") as ostr:
+    #     json.dump( predictions, ostr)
+    with open(args.save_dir / args.pred_file, "wb") as ostr:  # Note the "wb" mode for orjson
+        ostr.write(orjson.dumps(predictions))
     logger.debug("writing finished") 
+
+
+
 
 
 def main(args):
